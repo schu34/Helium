@@ -18,6 +18,8 @@ class HeliumWebView: WKWebView {
 class WebViewController: NSViewController, WKNavigationDelegate {
     
     var trackingTag: NSView.TrackingRectTag?
+    var isZoomed:Bool = false
+    
     
     override func loadView() {
         self.view = NSView()
@@ -42,7 +44,7 @@ class WebViewController: NSViewController, WKNavigationDelegate {
         // Setup magic URLs
         webView.navigationDelegate = self
         
-        // Allow zooming
+        // Allow zooming    
         webView.allowsMagnification = true
         
         // Enable inspector
@@ -67,29 +69,39 @@ class WebViewController: NSViewController, WKNavigationDelegate {
     }
     
     func zoomVideo() {
-        webView.evaluateJavaScript("""
-            var style = document.createElement("style");
-            style.appendChild(document.createTextNode(""));
-            document.head.appendChild(style);
-            style.sheet.insertRule(`
-                video {
-                    position    : fixed    !important;
-                    top         : 0        !important;
-                    left        : 0        !important;
-                    width       : 100%     !important;
-                    height      : 100%     !important;
-                    max-width   : 100%     !important;
-                    background  : black    !important;
-                    visibility  : visible  !important;
-                }
-            `);
-            style.sheet.insertRule(`
-                :not(video):not(body) {
-                    visibility  : hidden   !important;
-                    overflow    : visible  !important;
-                }
-            `);
-        """)
+        if(isZoomed){
+            webView.evaluateJavaScript("""
+                document.getElementById("__helium_style__").remove();
+            """)
+            isZoomed = false;
+        }else{
+            webView.evaluateJavaScript("""
+                var style = document.createElement("style");
+                style.appendChild(document.createTextNode(""));
+                style.id = "__helium_style__"
+                document.head.appendChild(style);
+                style.sheet.insertRule(`
+                    video {
+                        position    : fixed    !important;
+                        top         : 0        !important;
+                        left        : 0        !important;
+                        width       : 100vw     !important;
+                        height      : 100vh     !important;
+                        max-width   : 100vw     !important;
+                        max-height  : 100vh     !important;
+                        background  : black    !important;
+                        visibility  : visible  !important;
+                    }
+                `);
+                style.sheet.insertRule(`
+                    :not(video):not(body) {
+                        visibility  : hidden   !important;
+                        overflow    : visible  !important;
+                    }
+                `);
+            """)
+            isZoomed = true;
+        }
     }
 
     @objc func resetZoomLevel(_ sender: AnyObject) {

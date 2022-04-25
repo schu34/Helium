@@ -53,7 +53,7 @@ class SearchFieldToolbarItem: NSToolbarItem, NSSearchFieldDelegate {
     
     @objc func navigate(_ searchField: NSSearchField) {
         searchField.selectText(nil)
-//        model.navigateWithSearchTerm(searchField.stringValue)
+        model.navigateWithSearchTerm(searchField.stringValue)
     }
     
     @objc func click(_ searchField: NSSearchField) {

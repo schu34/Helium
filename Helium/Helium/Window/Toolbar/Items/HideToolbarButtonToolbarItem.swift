@@ -28,7 +28,7 @@ class HideToolbarButtonToolbarItem: NSToolbarItem {
     }
     
     @objc func hideToolbar(_ control: NSSegmentedControl) {
-        model.hideToolbar()
+        UserSetting.toolbarVisibility = ToolbarVisibility.hidden
     }
 }
 

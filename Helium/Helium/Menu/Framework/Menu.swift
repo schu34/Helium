@@ -33,7 +33,7 @@ extension Menu where Self: PrimitiveMenu {
     }
 }
 
-@_functionBuilder
+@resultBuilder
 struct MenuBuilder {
     static func buildBlock(_ menu: Menu) -> Menu {
         menu
